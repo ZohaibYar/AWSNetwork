@@ -84,12 +84,39 @@ jobs:
         working-directory: terraform
         run: terraform apply -auto-approve
 
-      - name: Get EC2 Public IP
+      - name: Wait for EC2 to be ready & Get Public IP
         id: ec2_ip
         run: |
-          IP=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=webserver" --query "Reservations[*].Instances[0].PublicIpAddress" --output text)
-          echo "EC2_IP=$IP" >> $GITHUB_ENV
+          echo "Waiting for EC2 instance to be in 'running' state..."
+          while true; do
+            STATE=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=webserver" \
+              --query "Reservations[*].Instances[0].State.Name" \
+              --output text)
+            if [[ "$STATE" == "running" ]]; then
+              echo "✅ EC2 is running!"
+              break
+            fi
+            echo "⏳ Still initializing... waiting 10s"
+            sleep 10
+          done
+
+          echo "Fetching Public IP..."
+          while true; do
+            IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=webserver" \
+              --query "Reservations[*].Instances[0].PublicIpAddress" \
+              --output text)
+            if [[ "$IP" != "None" && -n "$IP" ]]; then
+              echo "✅ EC2 Public IP: $IP"
+              echo "EC2_IP=$IP" >> $GITHUB_ENV
+              break
+            fi
+            echo "⏳ Public IP not assigned yet... waiting 5s"
+            sleep 5
+          done
         shell: bash
+
 
 
   ansible:
