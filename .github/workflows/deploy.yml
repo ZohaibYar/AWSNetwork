@@ -87,9 +87,9 @@ jobs:
       - name: Wait for EC2 and Fetch Public IP
         id: ec2_ip
         run: |
-          # Get ONLY the latest RUNNING instance with Name=webserver
+          # Get ONLY the latest RUNNING instance with Name=WebServer
           INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=webserver" "Name=instance-state-name,Values=running" \
+            --filters "Name=tag:Name,Values=WebServer" "Name=instance-state-name,Values=running" \
             --query "Reservations[*].Instances[*].InstanceId" \
             --output text | head -n 1)
 
