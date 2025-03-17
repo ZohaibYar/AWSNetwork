@@ -53,6 +53,9 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Add this line!
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Ensure Terraform Directory Exists
+        run: mkdir -p terraform
+        
       - name: Initialize Terraform
         working-directory: terraform
         run: terraform init
