@@ -153,8 +153,13 @@ jobs:
           echo "EC2 Public IP: ${{ env.EC2_IP }}"
         shell: bash
       - name: Debug - Show EC2 IP
-        run: echo "EC2_IP=${{ env.EC2_IP }}"
+        run: echo "EC2_IP=${{ env.EC2_IP }}" >> $GITHUB_ENV
+      - name: Debug SSH Command
+        run: echo "ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }}"
+      - name: Test SSH Connection
+        run: ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "echo 'SSH Connection Successful'"
 
+          
       - name: Update Ansible Inventory
         run: |
           echo "[WebServer]" > ansible/inventory.ini
