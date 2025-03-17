@@ -22,7 +22,7 @@ jobs:
       - name: Install Terraform
         run: |
           curl -O https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          unzip terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          unzip -o terraform_${{ env.TF_VERSION }}_linux_amd64.zip
           mkdir -p $HOME/bin
           mv terraform $HOME/bin/
           echo 'export PATH=$HOME/bin:$PATH' >> $HOME/.bashrc
