@@ -115,6 +115,7 @@ jobs:
             if [[ "$IP" != "None" && -n "$IP" ]]; then
               echo "✅ EC2 Public IP: $IP"
               echo "EC2_IP=$IP" >> $GITHUB_ENV
+              echo "::set-output name=EC2_IP::$IP"
               break
             fi
 
@@ -128,7 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: terraform
     env:
-      EC2_IP: ${{ needs.terraform.outputs.EC2_IP }}
+      EC2_IP: ${{ needs.terraform.outputs.ec2_ip }}
 
     steps:
       - name: Checkout Repository
@@ -147,8 +148,10 @@ jobs:
           chmod 400 ~/.ssh/labsuser.pem
           
 
-      - name: Debug - Show EC2 IP
-        run: echo "EC2_IP=${{ env.EC2_IP }}"
+      - name: Debug - Check EC2 IP Value
+        run: |
+          echo "EC2 IP in Ansible Job: ${{ env.EC2_IP }}"
+
 
       - name: Test SSH Connection
         run: ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "echo 'SSH Connection Successful'"
