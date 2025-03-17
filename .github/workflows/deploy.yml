@@ -55,7 +55,9 @@ jobs:
 
       - name: Ensure Terraform Directory Exists
         run: mkdir -p terraform
-        
+      - name: Debug - List Terraform Files
+        run: ls -lah terraform/
+
       - name: Initialize Terraform
         working-directory: terraform
         run: terraform init
