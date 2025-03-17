@@ -144,10 +144,16 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/labsuser.pem
           chmod 400 ~/.ssh/labsuser.pem
           
+      - name: Test SSH Connection
+        run: ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "echo 'SSH Connection Successful'"
+
+          
       - name: Debug - Show EC2 IP
         run: |
           echo "EC2 Public IP: ${{ env.EC2_IP }}"
         shell: bash
+      - name: Debug - Show EC2 IP
+        run: echo "EC2_IP=${{ env.EC2_IP }}"
 
       - name: Update Ansible Inventory
         run: |
