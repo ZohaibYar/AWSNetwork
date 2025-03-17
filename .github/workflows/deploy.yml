@@ -87,7 +87,9 @@ jobs:
       - name: Get EC2 Public IP
         id: ec2_ip
         run: |
-          echo "EC2_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)" >> $GITHUB_ENV
+          IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output text)
+          echo "EC2_IP=$IP" >> $GITHUB_ENV
+        shell: bash
 
   ansible:
     name: Configure EC2 with Ansible
