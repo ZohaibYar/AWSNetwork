@@ -22,6 +22,7 @@ jobs:
       - name: Install Terraform
         run: |
           curl -O https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          rm -rf terraform  # Ensure no existing directory named 'terraform'
           unzip -o terraform_${{ env.TF_VERSION }}_linux_amd64.zip
           mkdir -p $HOME/bin
           mv terraform $HOME/bin/
