@@ -97,8 +97,8 @@ jobs:
               echo "✅ EC2 is running!"
               break
             fi
-            echo "⏳ Still initializing... waiting 10s"
-            sleep 10
+            echo "⏳ Still initializing... waiting 100s"
+            sleep 100
           done
 
           echo "Fetching Public IP..."
@@ -112,8 +112,8 @@ jobs:
               echo "EC2_IP=$IP" >> $GITHUB_ENV
               break
             fi
-            echo "⏳ Public IP not assigned yet... waiting 5s"
-            sleep 5
+            echo "⏳ Public IP not assigned yet... waiting 100s"
+            sleep 100
           done
         shell: bash
 
