@@ -94,29 +94,29 @@ jobs:
       
           echo "Instance ID: $INSTANCE_ID"
       
-          if [ -z "$INSTANCE_ID" ]; then
-            echo "❌ ERROR: No instance found with tag Name=webserver!"
+          if [ "$INSTANCE_ID" == "None" ] || [ -z "$INSTANCE_ID" ]; then
+            echo "❌ ERROR: No running instance found!"
             exit 1
           fi
-      
+
           echo "Waiting for EC2 instance to be in 'running' state..."
           aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
-      
+
           echo "✅ EC2 is now running!"
-      
+
           echo "Fetching Public IP..."
           while true; do
             IP=$(aws ec2 describe-instances \
               --instance-ids "$INSTANCE_ID" \
-              --query "Reservations[*].Instances[0].PublicIpAddress" \
+              --query "Reservations[0].Instances[0].PublicIpAddress" \
               --output text)
-      
+
             if [[ "$IP" != "None" && -n "$IP" ]]; then
               echo "✅ EC2 Public IP: $IP"
               echo "EC2_IP=$IP" >> $GITHUB_ENV
               break
             fi
-      
+
             echo "⏳ Public IP not assigned yet... waiting 5s"
             sleep 5
           done
