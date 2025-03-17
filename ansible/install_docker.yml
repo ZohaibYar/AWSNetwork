@@ -1,0 +1,44 @@
+- name: Configure Web Server
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+    - name: Ensure system is updated
+      package:
+        name: "*"
+        state: latest
+
+    - name: Install Docker
+      package:
+        name: docker
+        state: present
+
+    - name: Start Docker and enable it on boot
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to the Docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Refresh group membership for ec2-user
+      command: newgrp docker
+
+    - name: Install pip
+      package:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker Python module
+      pip:
+        name: docker
+
+    - name: Restart Docker to apply group changes
+      service:
+        name: docker
+        state: restarted
