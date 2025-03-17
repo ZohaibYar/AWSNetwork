@@ -123,6 +123,17 @@ jobs:
             sleep 5
           done
         shell: bash
+      - name: Store EC2 IP in File
+        run: |
+          echo "${EC2_IP}" > ec2_ip.txt
+        shell: bash
+
+      - name: Upload EC2 IP as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ec2_ip
+          path: ec2_ip.txt
+
         
   ansible:
     name: Configure EC2 with Ansible
@@ -140,23 +151,31 @@ jobs:
           sudo apt update -y
           sudo apt install -y ansible
           ansible --version
-
-      - name: Set Up SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/labsuser.pem
-          chmod 400 ~/.ssh/labsuser.pem
           
+      - name: Download EC2 IP Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ec2_ip
+
+      - name: Read EC2 IP from File
+        run: |
+          export EC2_IP=$(cat ec2_ip.txt)
+          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
 
       - name: Debug - Check EC2 IP Value
         run: |
           echo "EC2 IP in Ansible Job: ${{ env.EC2_IP }}"
 
-
+      
+      - name: Set Up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/labsuser.pem
+          chmod 400 ~/.ssh/labsuser.pem
+      
       - name: Test SSH Connection
-        run: ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "echo 'SSH Connection Successful'"
-
-          
+        run: ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@$EC2_IP "echo 'SSH Connection Successful'"
+     
       - name: Update Ansible Inventory
         run: |
           echo "[WebServer]" > ansible/inventory.ini
