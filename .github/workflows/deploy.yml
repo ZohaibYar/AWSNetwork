@@ -72,6 +72,13 @@ jobs:
 
       - name: List Terraform Files
         run: ls -lah terraform
+      - name: Reinitialize Terraform (Fix Lock File)
+        working-directory: terraform
+        run: |
+          rm -rf .terraform .terraform.lock.hcl  # Remove old lock file
+          terraform init -upgrade
+          terraform validate
+
 
       - name: Apply Terraform
         working-directory: terraform
