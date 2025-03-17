@@ -65,6 +65,11 @@ jobs:
       - name: Validate Terraform
         working-directory: terraform
         run: terraform validate
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures the entire repository is fetched
+
       - name: List Terraform Files
         run: ls -lah terraform
 
