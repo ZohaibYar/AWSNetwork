@@ -19,15 +19,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-            - name: Install Terraform
+      - name: Install Terraform
         run: |
           curl -O https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          rm -f terraform  # Only remove if 'terraform' is a file, not a directory
           unzip -o terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/  # Move to a system-wide location
-          chmod +x /usr/local/bin/terraform  # Ensure Terraform is executable
-          echo "Terraform installed successfully!"
-          terraform -version
+          sudo mv terraform /usr/local/bin/  # Move Terraform to a system-wide location
+          sudo chmod +x /usr/local/bin/terraform  # Ensure it has execute permissions
+          echo "✅ Terraform installed successfully!"
+          which terraform  # Check if Terraform is in the PATH
+          terraform -version  # Verify installation
 
 
       - name: Configure AWS Credentials
