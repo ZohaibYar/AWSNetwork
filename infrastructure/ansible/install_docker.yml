@@ -1,0 +1,46 @@
+- name: Configure Web Server
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Update all packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Install Docker
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start Docker and enable it on boot
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ec2-user to the Docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+    - name: Install pip
+      dnf:
+        name: python3-pip
+        state: present
+
+    - name: Install Docker Python module
+      pip:
+        name: docker
+        extra_args: "--ignore-installed requests"
+
+    - name: Restart Docker to apply group changes
+      systemd:
+        name: docker
+        state: restarted
+        enabled: yes
+
+    - name: Log out the user (so group changes take effect)
+      shell: "sudo pkill -u ec2-user"
+      ignore_errors: yes
