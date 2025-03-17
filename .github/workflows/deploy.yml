@@ -22,12 +22,27 @@ jobs:
       - name: Install Terraform
         run: |
           curl -O https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          
+          # Remove existing directory or file named "terraform"
+          if [ -d "terraform" ]; then 
+            echo "⚠️ Removing existing 'terraform' directory..."
+            rm -rf terraform
+          elif [ -f "terraform" ]; then
+            echo "⚠️ Removing existing 'terraform' binary..."
+            rm -f terraform
+          fi
+          
+          # Extract the binary
           unzip -o terraform_${{ env.TF_VERSION }}_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/  # Move Terraform to a system-wide location
-          sudo chmod +x /usr/local/bin/terraform  # Ensure it has execute permissions
+          
+          # Move Terraform to a system-wide path
+          sudo mv terraform /usr/local/bin/
+          sudo chmod +x /usr/local/bin/terraform
+          
+          # Verify installation
           echo "✅ Terraform installed successfully!"
-          which terraform  # Check if Terraform is in the PATH
-          terraform -version  # Verify installation
+          which terraform
+          terraform -version
 
 
       - name: Configure AWS Credentials
