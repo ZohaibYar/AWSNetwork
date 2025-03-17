@@ -26,8 +26,13 @@
         groups: docker
         append: yes
 
-    - name: Refresh group membership for ec2-user
-      command: newgrp docker
+    - name: Inform user to log out and back in for group changes to take effect
+      debug:
+        msg: "Log out and back in or reboot the instance for 'ec2-user' to use Docker without sudo."
+
+    - name: Reboot the instance to apply Docker group changes
+      reboot:
+        reboot_timeout: 600
 
     - name: Install pip
       package:
