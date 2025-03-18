@@ -185,3 +185,7 @@ jobs:
   
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
+        
+      - name: Validate Docker Works for ec2-user (No Stuck Issues)
+        run: |
+          ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "docker ps"
