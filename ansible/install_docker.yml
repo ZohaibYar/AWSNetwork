@@ -20,19 +20,13 @@
         state: started
         enabled: yes
 
-    - name: Add ec2-user to the Docker group
-      user:
-        name: ec2-user
-        groups: docker
-        append: yes
+    - name: Add ec2-user to the Docker group (Instant)
+      command: gpasswd -a ec2-user docker
 
-    - name: Inform user to log out and back in for group changes to take effect
-      debug:
-        msg: "Log out and back in or reboot the instance for 'ec2-user' to use Docker without sudo."
-
-    - name: Reboot the instance to apply Docker group changes
-      reboot:
-        reboot_timeout: 600
+    - name: Force SSH session reload for group update (Safe)
+      shell: |
+        sudo su - ec2-user -c "groups"
+      changed_when: false
 
     - name: Install pip
       package:
@@ -43,7 +37,7 @@
       pip:
         name: docker
 
-    - name: Restart Docker to apply group changes
+    - name: Restart Docker service
       service:
         name: docker
         state: restarted
