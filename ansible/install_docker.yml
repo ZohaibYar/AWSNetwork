@@ -20,15 +20,23 @@
         state: started
         enabled: yes
 
-
     - name: Install pip
       package:
         name: python3-pip
         state: present
 
+    - name: Upgrade pip and setuptools
+      pip:
+        name:
+          - pip
+          - setuptools
+        state: latest
+        executable: pip3
+
     - name: Install Docker Python module
       pip:
         name: docker
+        executable: pip3
 
     - name: Restart Docker service
       service:
