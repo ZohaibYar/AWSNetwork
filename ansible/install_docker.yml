@@ -20,13 +20,6 @@
         state: started
         enabled: yes
 
-    - name: Add ec2-user to the Docker group (Instant)
-      command: gpasswd -a ec2-user docker
-
-    - name: Force SSH session reload for group update (Safe)
-      shell: |
-        sudo su - ec2-user -c "groups"
-      changed_when: false
 
     - name: Install pip
       package:
