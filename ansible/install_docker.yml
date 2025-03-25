@@ -20,18 +20,29 @@
         state: started
         enabled: yes
 
-    - name: Ensure required system packages are installed
+    - name: Ensure required system packages are installed (without python3-docker)
       package:
         name:
           - python3-pip
           - python3-setuptools
           - python3-requests
-          - python3-docker  # Install docker module via system package manager if available
         state: latest
 
-    - name: Install Docker Python module using pip (if not available via package manager)
+    - name: Check if python3-docker is available
+      command: yum list python3-docker
+      register: python3_docker_check
+      failed_when: false
+      changed_when: false
+
+    - name: Install python3-docker if available
+      package:
+        name: python3-docker
+        state: latest
+      when: "'python3-docker' in python3_docker_check.stdout"
+
+    - name: Install Docker Python module using pip (only if package manager installation failed)
       command: /usr/bin/pip3 install --no-deps docker
-      when: ansible_facts.packages['python3-docker'] is not defined
+      when: "'python3-docker' not in python3_docker_check.stdout"
 
     - name: Restart Docker service
       service:
