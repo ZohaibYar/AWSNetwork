@@ -25,13 +25,13 @@
         name: python3-pip
         state: present
 
-    - name: Upgrade pip and setuptools
-      pip:
-        name:
-          - pip
-          - setuptools
+    - name: Upgrade system-installed setuptools
+      package:
+        name: python3-setuptools
         state: latest
-        executable: pip3
+
+    - name: Upgrade pip and setuptools using pip
+      command: pip3 install --upgrade --ignore-installed pip setuptools
 
     - name: Install Docker Python module
       pip:
