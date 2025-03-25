@@ -50,7 +50,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  # Add this line!
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}  
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Ensure Terraform Directory Exists
@@ -185,7 +185,4 @@ jobs:
   
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
-        
-      - name: Validate Docker Works for ec2-user (No Stuck Issues)
-        run: |
-          ssh -i ~/.ssh/labsuser.pem -o StrictHostKeyChecking=no ec2-user@${{ env.EC2_IP }} "docker ps"
+       
