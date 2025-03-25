@@ -20,23 +20,18 @@
         state: started
         enabled: yes
 
-    - name: Install pip
+    - name: Ensure pip and setuptools are installed via system package manager
       package:
-        name: python3-pip
-        state: present
-
-    - name: Upgrade system-installed setuptools
-      package:
-        name: python3-setuptools
+        name:
+          - python3-pip
+          - python3-setuptools
         state: latest
 
     - name: Upgrade pip and setuptools using pip
-      command: pip3 install --upgrade --ignore-installed pip setuptools
+      command: /usr/bin/pip3 install --upgrade --ignore-installed pip setuptools
 
     - name: Install Docker Python module
-      pip:
-        name: docker
-        executable: pip3
+      command: /usr/bin/pip3 install docker --break-system-packages
 
     - name: Restart Docker service
       service:
