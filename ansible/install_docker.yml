@@ -26,12 +26,16 @@
           - python3-pip
           - python3-setuptools
         state: latest
+    - name: Ensure requests package is installed via system package manager
+      package:
+        name: python3-requests
+        state: latest
 
     - name: Upgrade pip and setuptools using pip
       command: /usr/bin/pip3 install --upgrade --ignore-installed pip setuptools
 
-    - name: Install Docker Python module
-      command: /usr/bin/pip3 install docker --break-system-packages
+    - name: Install Docker Python module without uninstalling requests
+      command: /usr/bin/pip3 install docker --ignore-installed
 
     - name: Restart Docker service
       service:
