@@ -20,22 +20,18 @@
         state: started
         enabled: yes
 
-    - name: Ensure pip and setuptools are installed via system package manager
+    - name: Ensure required system packages are installed
       package:
         name:
           - python3-pip
           - python3-setuptools
-        state: latest
-    - name: Ensure requests package is installed via system package manager
-      package:
-        name: python3-requests
+          - python3-requests
+          - python3-docker  # Install docker module via system package manager if available
         state: latest
 
-    - name: Upgrade pip and setuptools using pip
-      command: /usr/bin/pip3 install --upgrade --ignore-installed pip setuptools
-
-    - name: Install Docker Python module without uninstalling requests
-      command: /usr/bin/pip3 install docker --ignore-installed
+    - name: Install Docker Python module using pip (if not available via package manager)
+      command: /usr/bin/pip3 install --no-deps docker
+      when: ansible_facts.packages['python3-docker'] is not defined
 
     - name: Restart Docker service
       service:
