@@ -15,11 +15,12 @@
           <!DOCTYPE html>
           <html>
           <head>
-              <title>Welcome to My Web Page</title>
+              <title>Netwoking Assignment</title>
           </head>
           <body>
-              <h1>Hello from EC2!</h1>
-              <p>This HTML file was created manually using Ansible.</p>
+              <h1>Hello from zohaib Yar!</h1>
+              <p>NGNIX is running on Docker </p>
+              <h1>Assignment Complete </h1>
           </body>
           </html>
         mode: '0644'
