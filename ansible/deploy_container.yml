@@ -1,0 +1,18 @@
+- name: Deploy Docker Container
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Pull Nginx Docker Image
+      community.docker.docker_image:
+        name: nginx:latest
+        source: pull
+
+    - name: Run Nginx Container
+      community.docker.docker_container:
+        name: webserver
+        image: nginx:latest
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"
