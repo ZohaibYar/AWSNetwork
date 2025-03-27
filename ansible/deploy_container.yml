@@ -10,7 +10,7 @@
 
     - name: Copy Custom HTML File to Remote Server
       copy:
-        src: ansible/index.html
+        src: index.html
         dest: /home/ec2-user/index.html
 
     - name: Run Nginx Container with Custom Web Page
