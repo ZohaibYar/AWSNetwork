@@ -8,10 +8,11 @@
         name: nginx:latest
         source: pull
 
-    - name: Copy Custom HTML File to Remote Server
-      copy:
-        src: index.html
-        dest: /home/ec2-user/index.html
+      - name: Download index.html from GitHub
+        get_url:
+          url: "https://github.com/ZohaibYar/AWSNetwork/blob/main/ansible/index.html"
+          dest: "/home/ec2-user/index.html"
+
 
     - name: Run Nginx Container with Custom Web Page
       community.docker.docker_container:
