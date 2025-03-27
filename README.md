@@ -1,4 +1,4 @@
-# AWSNetwork
+# Automated Container Deployment and Administration in AWS
 his GitHub Actions workflow automates the deployment of infrastructure and applications to AWS using Terraform and Ansible. The process is split into two major stages: Terraform is used to provision the infrastructure (e.g., EC2 instances, VPC, Security group etc), and Ansible is used to configure the EC2 instance and deploy Docker and an Nginx container using Docker.
 
 **Workflow Triggers**
