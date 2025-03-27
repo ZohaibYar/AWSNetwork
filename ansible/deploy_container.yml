@@ -1,8 +1,8 @@
+
 - name: Deploy Docker Container
   hosts: all
   become: yes
   tasks:
-
     - name: Pull Nginx Docker Image
       community.docker.docker_image:
         name: nginx:latest
