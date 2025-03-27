@@ -6,6 +6,7 @@ his GitHub Actions workflow automates the deployment of infrastructure and appli
 yaml
 Copy
 Edit
+
 on:
   push:
     branches:
@@ -22,8 +23,8 @@ env:
   AWS_REGION: us-east-1
   TF_VERSION: 1.11.2
 AWS_REGION: Specifies the AWS region for the infrastructure (in this case, us-east-1).
-
 TF_VERSION: Specifies the version of Terraform to use (1.11.2)
+
 -----------------------------------------------------------------
 **Jobs**
 **1. Terraform Job**
