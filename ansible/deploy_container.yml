@@ -8,11 +8,21 @@
         name: nginx:latest
         source: pull
 
-      - name: Download index.html from GitHub
-        get_url:
-          url: "https://github.com/ZohaibYar/AWSNetwork/blob/main/ansible/index.html"
-          dest: "/home/ec2-user/index.html"
-
+    - name: Create index.html File on EC2
+      copy:
+        dest: "/home/ec2-user/index.html"
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Welcome to My Web Page</title>
+          </head>
+          <body>
+              <h1>Hello from EC2!</h1>
+              <p>This HTML file was created manually using Ansible.</p>
+          </body>
+          </html>
+        mode: '0644'
 
     - name: Run Nginx Container with Custom Web Page
       community.docker.docker_container:
