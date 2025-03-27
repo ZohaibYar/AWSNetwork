@@ -183,8 +183,8 @@ jobs:
       - name: Debug - Show Inventory File
         run: cat ansible/inventory.ini
   
-      - name: Run Ansible Playbook
+      - name: Run Ansible Playbook for Docker Installation
         run: ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
-      - name: Run Ansible Playbook to Deploy Container
+      - name: Run Ansible Playbook to Deploy NGNIX server
         run: ansible-playbook -i ansible/inventory.ini ansible/deploy_container.yml
 
