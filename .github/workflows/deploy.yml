@@ -185,4 +185,6 @@ jobs:
   
       - name: Run Ansible Playbook
         run: ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
-       
+      - name: Run Ansible Playbook to Deploy Container
+        run: ansible-playbook -i ansible/inventory.ini ansible/deploy_container.yml
+
