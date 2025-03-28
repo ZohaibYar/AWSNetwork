@@ -2,10 +2,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"  
+      version = "~> 5.0"
     }
   }
 }
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -59,6 +60,22 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # =========================
+# NAT Gateway Setup
+# =========================
+resource "aws_eip" "nat_eip" {
+  domain = "vpc"
+}
+
+resource "aws_nat_gateway" "nat_gw" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnet_1.id
+
+  tags = {
+    Name = "NAT Gateway"
+  }
+}
+
+# =========================
 # Security Group for EC2
 # =========================
 resource "aws_security_group" "web_sg" {
@@ -90,16 +107,17 @@ resource "aws_security_group" "web_sg" {
 # EC2 Instance
 # =========================
 resource "aws_instance" "web_server" {
-  ami                    = "ami-08b5b3a93ed654d19"  
+  ami                    = "ami-08b5b3a93ed654d19"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_1.id
   vpc_security_group_ids = [aws_security_group.web_sg.id]
-  key_name               = "vockey"  
+  key_name               = "vockey"
 
   tags = {
     Name = "WebServer"
   }
 }
+
 # =========================
 # Public Route Table
 # =========================
@@ -121,4 +139,27 @@ resource "aws_route_table_association" "public_subnet_1_assoc" {
 resource "aws_route_table_association" "public_subnet_2_assoc" {
   subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.public_rt.id
+}
+
+# =========================
+# Private Route Table (for NAT Gateway)
+# =========================
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.zohaib_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+  }
+}
+
+# Associate Private Subnets with the Private Route Table
+resource "aws_route_table_association" "private_subnet_1_assoc" {
+  subnet_id      = aws_subnet.private_subnet_1.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+resource "aws_route_table_association" "private_subnet_2_assoc" {
+  subnet_id      = aws_subnet.private_subnet_2.id
+  route_table_id = aws_route_table.private_rt.id
 }
